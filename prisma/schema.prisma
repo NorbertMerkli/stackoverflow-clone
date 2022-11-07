@@ -1,0 +1,86 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               Int               @id @default(autoincrement())
+  registeredAt     DateTime          @default(now())
+  name             String
+  password         String?
+  email            String
+  questions        Question[]
+  answers          Answer[]
+  questionComments QuestionComment[]
+  answerComments   AnswerComment[]
+  questionVotes    QuestionVote[]
+  answerVotes      AnswerVote[]
+}
+
+model Question {
+  id            Int               @id @default(autoincrement())
+  timestamp     DateTime          @default(now())
+  user          User              @relation(fields: [userId], references: [id])
+  userId        Int
+  title         String
+  description   String?
+  comments      QuestionComment[]
+  questionVotes QuestionVote[]
+  answers       Answer[]
+}
+
+model Answer {
+  id             Int             @id @default(autoincrement())
+  timestamp      DateTime        @default(now())
+  user           User            @relation(fields: [userId], references: [id])
+  userId         Int
+  question       Question        @relation(fields: [questionId], references: [id])
+  questionId     Int
+  description    String
+  accepted       Boolean
+  answerComments AnswerComment[]
+  answerVotes    AnswerVote[]
+}
+
+model QuestionComment {
+  id          Int      @id @default(autoincrement())
+  timestamp   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int
+  question    Question @relation(fields: [questionId], references: [id])
+  questionId  Int
+  description String
+}
+
+model AnswerComment {
+  id          Int      @id @default(autoincrement())
+  timestamp   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int
+  answer      Answer   @relation(fields: [answerId], references: [id])
+  answerId    Int
+  description String
+}
+
+model QuestionVote {
+  id         Int      @id @default(autoincrement())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  question   Question @relation(fields: [questionId], references: [id])
+  questionId Int
+}
+
+model AnswerVote {
+  id       Int    @id @default(autoincrement())
+  user     User   @relation(fields: [userId], references: [id])
+  userId   Int
+  answer   Answer @relation(fields: [answerId], references: [id])
+  answerId Int
+}
