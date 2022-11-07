@@ -10,8 +10,8 @@ module.exports = {
             colors: {
                 primary: "#F48024",
                 secondary: "#0095FF",
-                grey: "#BBC0C4",
-                disabled: "#B4B8BC",
+                grey: "#6A737C",
+                disabled: "#BCBBBB",
                 light: "#F8F9F9",
                 dark: "#242729",
                 yellow: "#FFB500",
