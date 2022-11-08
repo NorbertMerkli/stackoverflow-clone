@@ -13,6 +13,15 @@ export default function SignIn() {
                 >
                     Sign in with Google
                 </button>
+                <button
+                    onClick={() =>
+                        signIn("github", {
+                            callbackUrl: "http://localhost:3000",
+                        })
+                    }
+                >
+                    Sign in with GitHub
+                </button>
             </main>
         </div>
     );
