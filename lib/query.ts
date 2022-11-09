@@ -1,6 +1,7 @@
 import { User } from "@prisma/client";
 import { User as FederatedUser } from "next-auth/core/types";
-import db from "./db";
+
+import db from "@lib/db";
 
 // CREATE
 

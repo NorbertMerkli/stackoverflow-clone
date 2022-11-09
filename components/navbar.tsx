@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { isAuthorized } from "../lib/auth";
-import { NavbarLogo } from "./navbar-logo";
-import { SignOutButton } from "./signout-button";
+
+import { isAuthorized } from "@lib/auth";
+import { NavbarLogo } from "@components/navbar-logo";
+import { SignOutButton } from "@components/auth-buttons";
 
 export function Navbar() {
     return (
