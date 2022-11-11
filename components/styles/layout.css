@@ -1,0 +1,13 @@
+@layer utilities {
+    .shape {
+        @apply rounded-lg;
+    }
+
+    .center {
+        @apply flex justify-center items-center;
+    }
+
+    .divider-h {
+        @apply border-b-[1px] border-grey;
+    }
+}

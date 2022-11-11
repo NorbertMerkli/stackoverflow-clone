@@ -1,0 +1,12 @@
+@layer components {
+    .input-wrapper {
+        @apply shape h-12 px-4 flex flex-row items-center border-2 border-light;
+        @apply hover:border-grey hover:focus-within:border-primary/75 focus-within:border-primary/75;
+    }
+
+    .text-input {
+        @apply form-input p-0 border-none outline-none;
+        @apply placeholder:text-grey text-dark;
+        @apply focus:outline-none focus:border-none focus:ring-0;
+    }
+}

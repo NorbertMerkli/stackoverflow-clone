@@ -1,0 +1,19 @@
+@layer components {
+    .button {
+        @apply shape h-12;
+    }
+
+    .button svg {
+        @apply inline-block mr-2;
+    }
+
+    .button-primary {
+        @apply button bg-primary/75 text-white;
+        @apply hover:bg-primary;
+    }
+
+    .button-outlined-light {
+        @apply button border-2 border-light text-grey;
+        @apply hover:border-dark hover:text-dark;
+    }
+}
