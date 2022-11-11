@@ -1,6 +1,4 @@
-import "./globals.css";
-
-import { Navbar } from "@components/navbar";
+import "@styles/globals.css";
 
 export default function RootLayout({
     children,
@@ -10,10 +8,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <head />
-            <body className="bg-light pt-20">
-                <Navbar />
-                {children}
-            </body>
+            <body className="bg-light">{children}</body>
         </html>
     );
 }
