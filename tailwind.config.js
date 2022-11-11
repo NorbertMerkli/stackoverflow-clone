@@ -8,13 +8,12 @@ module.exports = {
     theme: {
         extend: {
             colors: {
-                primary: "#F48024",
+                primary: "#F48224",
                 secondary: "#0095FF",
-                grey: "#6A737C",
-                disabled: "#BCBBBB",
-                light: "#F8F9F9",
+                yellow: "#FFB502",
                 dark: "#242729",
-                yellow: "#FFB500",
+                grey: "#BBC0C4",
+                light: "#F5F5F5",
             },
             fontFamily: {
                 logo: ["PT Sans", "sans-serif"],
@@ -23,5 +22,5 @@ module.exports = {
             },
         },
     },
-    plugins: [],
+    plugins: [require("@tailwindcss/forms")],
 };
