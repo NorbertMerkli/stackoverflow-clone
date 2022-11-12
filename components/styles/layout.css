@@ -8,6 +8,6 @@
     }
 
     .divider-h {
-        @apply border-b-[1px] border-grey;
+        @apply border-b-[1px] border-dark;
     }
 }
