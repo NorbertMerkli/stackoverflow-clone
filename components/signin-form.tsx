@@ -1,6 +1,7 @@
 "use client";
 
 import {
+    ChangeEvent,
     ChangeEventHandler,
     ReactNode,
     RefObject,
@@ -23,6 +24,17 @@ export function SigninWithCredentialsForm() {
         setPasswordVisibility((visibilityState) => !visibilityState);
     }, []);
 
+    const updateEmail = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+        console.log(event.target.checkValidity());
+
+        setEmail(event.target.value);
+    }, []);
+    const updatePassword = useCallback(
+        (event: ChangeEvent<HTMLInputElement>) =>
+            setPassword(event.target.value),
+        []
+    );
+
     const emailField = useMemo(
         () => (
             <InputField
@@ -31,10 +43,10 @@ export function SigninWithCredentialsForm() {
                 name="email"
                 value={email}
                 placeholder="Email"
-                changeHandler={(event) => setEmail(event.target.value)}
+                changeHandler={updateEmail}
             />
         ),
-        [email]
+        [email, updateEmail]
     );
 
     const passwordField = useMemo(
@@ -46,7 +58,7 @@ export function SigninWithCredentialsForm() {
                 value={password}
                 placeholder="Password"
                 className="mt-4 mb-8"
-                changeHandler={(event) => setPassword(event.target.value)}
+                changeHandler={updatePassword}
             >
                 {isPasswordVisible ? (
                     <EyeIcon
@@ -61,7 +73,7 @@ export function SigninWithCredentialsForm() {
                 )}
             </InputField>
         ),
-        [password, isPasswordVisible, togglePasswordVisibility]
+        [password, updatePassword, isPasswordVisible, togglePasswordVisibility]
     );
 
     const submitButton = useMemo(SubmitButton, []);
