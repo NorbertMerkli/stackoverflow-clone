@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 import { GitHubLogo } from "./vectors/logos/github";
 import { GoogleLogo } from "./vectors/logos/google";
 
-export function SigninWithProviderPanel() {
+export function SigninWithProviderPanel({ referrer }: { referrer: string }) {
     // Despite my use of the "use client" directive,
     // the framework shows a ReferenceError caused by the 'document' object unless I wrap it in a 'useEffect' hook.
     //
@@ -14,41 +14,31 @@ export function SigninWithProviderPanel() {
     const callbackUrl = useRef("");
 
     useEffect(() => {
-        callbackUrl.current = document.referrer.includes(
-            document.location.origin
-        )
-            ? document.referrer
+        callbackUrl.current = referrer.includes(document.location.origin)
+            ? referrer
             : document.location.origin;
-    }, []);
+    }, [referrer]);
 
     return (
         <section className="grid grid-cols-2 grid-rows-1 gap-4">
-            <SigninWithGoogle callbackUrl={callbackUrl.current} />
-            <SigninWithGitHub callbackUrl={callbackUrl.current} />
+            <button
+                className="button-outlined-light"
+                onClick={() =>
+                    signIn("google", { callbackUrl: callbackUrl.current })
+                }
+            >
+                <GoogleLogo />
+                Google
+            </button>
+            <button
+                className="button-outlined-light"
+                onClick={() =>
+                    signIn("github", { callbackUrl: callbackUrl.current })
+                }
+            >
+                <GitHubLogo />
+                GitHub
+            </button>
         </section>
-    );
-}
-
-function SigninWithGoogle({ callbackUrl }: { callbackUrl: string }) {
-    return (
-        <button
-            className="button-outlined-light"
-            onClick={() => signIn("google", { callbackUrl })}
-        >
-            <GoogleLogo />
-            Google
-        </button>
-    );
-}
-
-function SigninWithGitHub({ callbackUrl }: { callbackUrl: string }) {
-    return (
-        <button
-            className="button-outlined-light"
-            onClick={() => signIn("github", { callbackUrl })}
-        >
-            <GitHubLogo />
-            GitHub
-        </button>
     );
 }

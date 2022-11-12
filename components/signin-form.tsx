@@ -3,16 +3,32 @@
 import {
     ChangeEvent,
     ChangeEventHandler,
+    FormEvent,
     ReactNode,
     RefObject,
     useCallback,
+    useEffect,
     useMemo,
     useRef,
     useState,
 } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import { signIn } from "next-auth/react";
 
-export function SigninWithCredentialsForm() {
+export function SigninWithCredentialsForm({ referrer }: { referrer: string }) {
+    // Despite my use of the "use client" directive,
+    // the framework shows a ReferenceError caused by the 'document' object unless I wrap it in a 'useEffect' hook.
+    //
+    // Complaint: If the file is marked with the "use client" directive,
+    // there should be no errors or warnings caused by the usage of browser APIs.
+    const callbackUrl = useRef("");
+
+    useEffect(() => {
+        callbackUrl.current = referrer.includes(document.location.origin)
+            ? referrer
+            : document.location.origin;
+    }, [referrer]);
+
     const emailFieldRef = useRef<HTMLInputElement>(null);
     const passwordFieldRef = useRef<HTMLInputElement>(null);
 
@@ -29,10 +45,24 @@ export function SigninWithCredentialsForm() {
 
         setEmail(event.target.value);
     }, []);
+
     const updatePassword = useCallback(
         (event: ChangeEvent<HTMLInputElement>) =>
             setPassword(event.target.value),
         []
+    );
+
+    const signinWithCredentials = useCallback(
+        (event: FormEvent<HTMLFormElement>) => {
+            event.preventDefault();
+
+            signIn("credentials", {
+                email: emailFieldRef.current?.value,
+                password: passwordFieldRef.current?.value,
+                callbackUrl: callbackUrl.current,
+            });
+        },
+        [callbackUrl]
     );
 
     const emailField = useMemo(
@@ -79,7 +109,7 @@ export function SigninWithCredentialsForm() {
     const submitButton = useMemo(SubmitButton, []);
 
     return (
-        <form>
+        <form onSubmit={signinWithCredentials}>
             {emailField}
             {passwordField}
             {submitButton}
