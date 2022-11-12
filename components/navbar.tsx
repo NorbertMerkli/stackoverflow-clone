@@ -1,16 +1,16 @@
-import Link from "next/link";
+import { cookies } from "next/headers";
 
-import { isAuthorized } from "@lib/auth";
 import { AppLogo } from "@components/app-logo";
+import { SignoutButton } from "./signout-button";
 
 export function Navbar() {
     return (
         <header className="fixed top-0 left-0 w-full flex justify-between items-center p-4 shadow-lg">
             <AppLogo />
-            {isAuthorized() ? (
-                <span>SignOutButton</span>
+            {cookies().get("next-auth.session-token") ? (
+                <SignoutButton />
             ) : (
-                <Link href="/auth/signin">SignIn</Link>
+                <a href="/auth/signin">SignIn</a>
             )}
         </header>
     );
