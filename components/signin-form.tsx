@@ -105,15 +105,19 @@ export function SigninWithCredentialsForm() {
 
     const submitButton = useMemo(SubmitButton, []);
 
-    // TODO: Implement a nice viasual representation of authentication errors
-
     return (
         <form onSubmit={signinWithCredentials}>
+            <p className="px-8 my-8 text-center text-dark">
+                {errorMessage ? (
+                    <span className="text-red-500 font-bold">
+                        {errorMessage}
+                    </span>
+                ) : (
+                    "Enter your details to get sign in to your account"
+                )}
+            </p>
             {emailField}
             {passwordField}
-            {errorMessage && (
-                <p className="text-center text-red-500">{errorMessage}</p>
-            )}
             {submitButton}
         </form>
     );
