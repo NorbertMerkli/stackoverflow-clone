@@ -2,11 +2,17 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from "bcrypt";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import argon2 from "argon2";
 
-import { createUser, getUserByEmail } from "@lib/query";
+import db from "@db/connection";
+import { getUserByEmail } from "@db/query/user";
 
 export const authOptions: NextAuthOptions = {
+    adapter: PrismaAdapter(db),
+    session: {
+        strategy: "jwt",
+    },
     providers: [
         CredentialsProvider({
             // According to the official documentation,
@@ -24,13 +30,12 @@ export const authOptions: NextAuthOptions = {
                     if (
                         user &&
                         user.password &&
-                        (await bcrypt.compare(
-                            credentials.password,
-                            user.password
+                        (await argon2.verify(
+                            user.password,
+                            credentials.password
                         ))
-                    ) {
+                    )
                         return user;
-                    }
                 }
 
                 return null;
@@ -51,16 +56,6 @@ export const authOptions: NextAuthOptions = {
         // error: "/auth/error", // Error code passed in query string as ?error=
         // verifyRequest: "/auth/verify-request", // (used for check email message)
         // newUser: "/auth/new-user", // New users will be directed here on first sign in (leave the property out if not of interest)
-    },
-    events: {
-        async signIn(message) {
-            if (
-                message.account?.provider === "google" ||
-                message.account?.provider === "github"
-            ) {
-                await createUser(message.user);
-            }
-        },
     },
 };
 
