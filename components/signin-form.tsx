@@ -7,27 +7,19 @@ import {
     ReactNode,
     RefObject,
     useCallback,
-    useEffect,
     useMemo,
     useRef,
     useState,
 } from "react";
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
-export function SigninWithCredentialsForm({ referrer }: { referrer: string }) {
-    // Despite my use of the "use client" directive,
-    // the framework shows a ReferenceError caused by the 'document' object unless I wrap it in a 'useEffect' hook.
-    //
-    // Complaint: If the file is marked with the "use client" directive,
-    // there should be no errors or warnings caused by the usage of browser APIs.
-    const callbackUrl = useRef("");
+import { useCallbackURL } from "../lib/routing";
 
-    useEffect(() => {
-        callbackUrl.current = referrer.includes(document.location.origin)
-            ? referrer
-            : document.location.origin;
-    }, [referrer]);
+export function SigninWithCredentialsForm() {
+    const router = useRouter();
+    const callbackUrl = useCallbackURL();
 
     const emailFieldRef = useRef<HTMLInputElement>(null);
     const passwordFieldRef = useRef<HTMLInputElement>(null);
@@ -35,14 +27,13 @@ export function SigninWithCredentialsForm({ referrer }: { referrer: string }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isPasswordVisible, setPasswordVisibility] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
     const togglePasswordVisibility = useCallback(() => {
         setPasswordVisibility((visibilityState) => !visibilityState);
     }, []);
 
     const updateEmail = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-        console.log(event.target.checkValidity());
-
         setEmail(event.target.value);
     }, []);
 
@@ -53,16 +44,22 @@ export function SigninWithCredentialsForm({ referrer }: { referrer: string }) {
     );
 
     const signinWithCredentials = useCallback(
-        (event: FormEvent<HTMLFormElement>) => {
+        async (event: FormEvent<HTMLFormElement>) => {
             event.preventDefault();
 
-            signIn("credentials", {
+            const authentication = await signIn("credentials", {
                 email: emailFieldRef.current?.value,
                 password: passwordFieldRef.current?.value,
-                callbackUrl: callbackUrl.current,
+                redirect: false,
             });
+
+            if (authentication?.ok) {
+                router.push(callbackUrl);
+            } else {
+                setErrorMessage("Invalid email or password");
+            }
         },
-        [callbackUrl]
+        [callbackUrl, router]
     );
 
     const emailField = useMemo(
@@ -108,10 +105,15 @@ export function SigninWithCredentialsForm({ referrer }: { referrer: string }) {
 
     const submitButton = useMemo(SubmitButton, []);
 
+    // TODO: Implement a nice viasual representation of authentication errors
+
     return (
         <form onSubmit={signinWithCredentials}>
             {emailField}
             {passwordField}
+            {errorMessage && (
+                <p className="text-center text-red-500">{errorMessage}</p>
+            )}
             {submitButton}
         </form>
     );
