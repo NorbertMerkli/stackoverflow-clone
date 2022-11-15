@@ -1,6 +1,6 @@
 @layer components {
     .input-wrapper {
-        @apply shape h-12 px-4 flex flex-row items-center border-2 border-light;
+        @apply shape h-12 pl-4 pr-2 flex flex-row items-center border-2 border-light;
         @apply hover:border-grey hover:focus-within:border-primary/75 focus-within:border-primary/75;
     }
 
