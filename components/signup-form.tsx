@@ -12,7 +12,6 @@ import {
     useState,
 } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 export function SignupForm() {
