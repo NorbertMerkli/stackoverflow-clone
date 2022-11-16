@@ -128,12 +128,18 @@ export function SignupForm() {
 
     return (
         <form onSubmit={signupWithCredentials}>
+            <p className="px-8 my-8 text-center text-dark">
+                {errorMessage ? (
+                    <span className="text-red-500 font-bold">
+                        {errorMessage}
+                    </span>
+                ) : (
+                    "Enter your details to create an account"
+                )}
+            </p>
             {nameField}
             {emailField}
             {passwordField}
-            {errorMessage && (
-                <p className="text-center text-red-500">{errorMessage}</p>
-            )}
             {submitButton}
         </form>
     );
